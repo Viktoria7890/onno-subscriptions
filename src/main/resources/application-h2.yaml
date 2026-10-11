@@ -1,0 +1,7 @@
+# Запуск без Docker/PostgreSQL: ./gradlew bootRun --args='--spring.profiles.active=h2'
+spring:
+  datasource:
+    url: jdbc:h2:file:./data/subscriptions;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""

@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: onno-subscriptions
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/subscriptions}
+    username: ${DB_USER:subscriptions}
+    password: ${DB_PASSWORD:subscriptions}
+
+server:
+  port: ${PORT:8080}
+
+# JobRunr: исполнитель фоновых/регламентных заданий (регистрирует @ScheduledJob).
+org:
+  jobrunr:
+    background-job-server:
+      enabled: true
+    dashboard:
+      enabled: false
+
+onno:
+  ui:
+    # Язык «хрома» интерфейса (кнопки, логин, пустые состояния) — onno поставляет русский пакет.
+    locale: ru
+    # Нижняя кнопка формы «Отмена» закрывает форму без сохранения. Переименовываем её, чтобы не
+    # путать с бизнес-действием «Отменить подписку».
+    messages:
+      "[action.cancel]": Закрыть
+    # Кнопки быстрого входа на экране логина (демо: пароли видны браузеру — для теста это ок).
+    login:
+      demo-accounts:
+        - label: Войти как администратор
+          username: admin
+          password: admin
+        - label: Войти как менеджер
+          username: manager
+          password: manager
+  auth:
+    mode: in-memory
+    session:
+      remember-me:
+        # Только для локального запуска: фиксированный несекретный ключ. В проде задайте key.
+        allow-ephemeral-key: true
+    # Роли: ADMIN — всё, в том числе создание и изменение тарифов;
+    # MANAGER — клиенты, платежи, подписки, отмена, отчёты; тарифы только просмотр.
+    users:
+      - username: admin
+        password: admin
+        roles: [ADMIN]
+      - username: manager
+        password: manager
+        roles: [MANAGER]
+
+app:
+  demo-data:
+    enabled: ${DEMO_DATA:true}
